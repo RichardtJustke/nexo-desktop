@@ -126,7 +126,9 @@ install_appimage() {
 
   local bin_path="${target_dir}/${BINARY_NAME}"
   local appimage_url
-  appimage_url=$(asset_url "$tag" "_${appimage_arch}.AppImage")
+  # O Tauri nomeia o AppImage com amd64/aarch64 (ex.: Nexo_0.1.0_amd64.AppImage); x86_64 fica de reserva
+  appimage_url=$(asset_url "$tag" "_${arch}.AppImage")
+  [ -z "$appimage_url" ] && appimage_url=$(asset_url "$tag" "_${appimage_arch}.AppImage")
 
   mkdir -p "$target_dir"
   log_info "Baixando Nexo AppImage de: ${appimage_url:-(não encontrado)}"
