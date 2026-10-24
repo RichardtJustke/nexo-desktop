@@ -132,10 +132,13 @@ install_appimage() {
 
   mkdir -p "$target_dir"
   log_info "Baixando Nexo AppImage de: ${appimage_url:-(não encontrado)}"
-  if [ -z "$appimage_url" ] || ! curl -fsSL -o "$bin_path" "$appimage_url"; then
+  # Baixa ao lado e troca no fim: com o Nexo aberto, escrever direto no arquivo falha ("Text file busy")
+  if [ -z "$appimage_url" ] || ! curl -fsSL -o "${bin_path}.new" "$appimage_url"; then
+    rm -f "${bin_path}.new"
     log_error "Não foi possível baixar o Nexo $tag para ${appimage_arch}."
     exit 1
   fi
+  mv -f "${bin_path}.new" "$bin_path"
 
   chmod +x "$bin_path"
   log_success "Binário salvo e tornado executável em: $bin_path"
